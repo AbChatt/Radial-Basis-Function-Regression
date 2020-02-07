@@ -6,14 +6,14 @@ B. Chan, S. Wei, D. Fleet
 
  COMPLETE THIS TEXT BOX:
 
- Student Name:
- Student number:
- UtorID:
+ Student Name: Abhishek Chatterjee
+ Student number: 1004820615
+ UtorID: chatt114
 
  I hereby certify that the work contained here is my own
 
 
- ____________________
+  Abhishek Chatterjee
  (sign with your name)
 
 ===========================================================
@@ -95,7 +95,16 @@ class RBFRegression():
 
         # ====================================================
         # TODO: Implement your solution within the box
-        
+
+        # need to create B matrix by starting with column of 1s and then adding more columns
+
+        B = np.ones((X.shape[0], 1))
+
+        for i in range(self.K):
+            B = np.hstack((B, self._rbf_2d(X, i)))
+
+        return np.matmul(B, self.parameters)        
+
         # ====================================================
     
     def fit_with_l2_regularization(self, train_X, train_Y, l2_coef):
@@ -120,6 +129,16 @@ class RBFRegression():
         # ====================================================
         # TODO: Implement your solution within the box
         
+        B = np.ones((train_X.shape[0], 1))
+
+        for i in range(self.K):
+            B = np.hstack((B, self._rbf_2d(train_X, i)))
+        
+        p1 = np.matmul(B.T, B)
+        p2 = np.dot(l2_coef, np.identity(self.K+1))
+        p3 = np.linalg.inv(p1 + p2)
+        
+        self.parameters = np.matmul(p3, np.matmul(B.T, train_Y))
         # ====================================================
 
         assert self.parameters.shape == (self.K + 1, 1)
